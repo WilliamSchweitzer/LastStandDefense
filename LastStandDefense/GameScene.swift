@@ -7,19 +7,45 @@
 
 import SpriteKit
 import GameplayKit
+import Foundation
 
 class GameScene: SKScene {
     
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
+    private let titleString = "Last Stand Defense"
+    private var currentString = ""
+    private let totalDuration = 1.8
+    private let interval = 0.1
+    private var elapsedTime = 0.0
+    private var currentIndex = 0
+    
     
     override func didMove(to view: SKView) {
         
         // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
+        self.label = self.childNode(withName: "//home") as? SKLabelNode
         if let label = self.label {
             label.alpha = 0.0
             label.run(SKAction.fadeIn(withDuration: 2.0))
+            
+            Timer.scheduledTimer(withTimeInterval: self.interval, repeats: true) { timer in
+                self.elapsedTime += self.interval
+                
+                if self.currentIndex < self.titleString.count {
+                    let index = self.titleString.index(self.titleString.startIndex, offsetBy: self.currentIndex)
+                    self.currentString.append(self.titleString[index])
+                    self.currentIndex += 1
+                    label.text = self.currentString
+                    
+                    if self.elapsedTime >= self.totalDuration || self.currentIndex >= self.titleString.count {
+                            timer.invalidate()
+                    }
+                }
+                
+            }
+            
+
         }
         
         // Create shape node to use during mouse interaction
